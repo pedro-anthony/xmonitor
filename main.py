@@ -77,12 +77,12 @@ def display_workers(workers_data):
     headers = [
         "Hostname", 
         "Hashrate (H/s)", 
-        "Modelo da CPU", 
-        "Núcleos (C/T)",  
-        "Memória Total (MB)", 
-        "Memória Livre (MB)", 
-        "Média de Carga (1m, 5m, 15m)", 
-        "Pool", 
+        "CPU Model", 
+        "Cores (C/T)",  
+        "Total Memory (MB)", 
+        "Available Memory (MB)", 
+        "Load Average (1m, 5m, 15m)", 
+        "Pool",
         "Status"
     ]
 
@@ -125,8 +125,8 @@ def display_workers(workers_data):
     print(tabulate(table_data, headers=headers, tablefmt="simpleh"))
 
 def display_total_hashrate(total_hashrate, pools):
-    print(f"\n{Fore.YELLOW}Hashrate Total: {Fore.GREEN}{total_hashrate / 1000:.2f} KH/s{Style.RESET_ALL} ({total_hashrate} H/s)")
-    print(f"{Fore.CYAN}Pools sendo mineradas:{Style.RESET_ALL} {', '.join(pools)}")
+    print(f"\n{Fore.YELLOW}Total Hashrate: {Fore.GREEN}{total_hashrate / 1000:.2f} KH/s{Style.RESET_ALL} ({total_hashrate} H/s)")
+    print(f"{Fore.CYAN}Pools being mined:{Style.RESET_ALL} {', '.join(pools)}")
 
 def main():
     urls = load_worker_urls()
