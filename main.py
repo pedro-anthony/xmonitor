@@ -90,8 +90,8 @@ def display_workers(workers_data):
             total_memory = 0
             free_memory = 0
             load_average = [0, 0, 0]
-            status = f"{Back.RED}Offline{Style.RESET_ALL}"
-            text_style = Back.RED + Style.BRIGHT
+            status = f"{Fore.RED}Offline{Style.RESET_ALL}"
+            text_style = Fore.BLACK + Style.DIM
             cores_threads = "0c/0t"
         else:
             hashrate = worker.get("hashrate", 0)
@@ -157,7 +157,7 @@ def main():
 
         save_cache(cache)
 
-        time.sleep(5)
+        time.sleep(1)
 
 if __name__ == "__main__":
     main()
