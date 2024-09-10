@@ -1,2 +1,34 @@
-# xmonitor
-Script for monitoring XMRig miners
+# Xmonitor
+
+## Overview
+This script periodically queries XMRig worker statistics from the specified URLs and displays their performance metrics in a tabulated format. It helps users monitor their mining operations by providing real-time data on hashrate, CPU model, memory usage, and system load.
+
+## How to Use
+
+### Requirements
+
+- Python 3.x
+- Requests
+- Tabulate
+- Colorama
+
+
+You can install the required packages just by running poetry, which will then create an ENV you can use:
+
+```bash
+$ poetry shell
+```
+
+### Configuration
+Create a `workers.json` file in the same directory as the script. This file should contain the URLs of the mining workers you want to monitor. Here is an example:
+```json
+{
+"urls": [
+	"http://127.0.10.1:5200/2/summary"
+	]
+}
+```
+
+## This project is licensed under the General Public License v3.0
+
+
