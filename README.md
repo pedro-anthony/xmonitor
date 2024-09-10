@@ -20,7 +20,18 @@ $ poetry shell
 ```
 
 ### Configuration
-Create a `workers.json` file in the same directory as the script. This file should contain the URLs of the mining workers you want to monitor. Here is an example:
+Configure your XMRig workers to enable the http API (Tokens and unrestricted access are currently not supported)
+```json
+"http": {
+        "enabled": true,
+        "host": "0.0.0.0",
+        "port": 5200,
+        "access-token": null,
+        "restricted": true
+    },
+```
+
+Create a `workers.json` file in the same directory as the script. This file should contain the URLs of the mining workers you want to monitor
 ```json
 {
 "urls": [
