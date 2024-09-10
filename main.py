@@ -46,6 +46,7 @@ def get_worker_data(url, cache):
         load_average = data.get("resources", {}).get("load_average", [0, 0, 0])
         cores = data.get("cpu", {}).get("cores", "N/A")
         threads = data.get("cpu", {}).get("threads", "N/A")
+        pool = data.get("connection", {}).get("pool", "N/A")
 
         total_memory = convert_bytes_to_mb(total_memory)
         free_memory = convert_bytes_to_mb(free_memory)
@@ -58,7 +59,8 @@ def get_worker_data(url, cache):
             "free_memory": free_memory,
             "load_average": load_average,
             "cores": cores,
-            "threads": threads
+            "threads": threads,
+            "pool": pool
         }
         cache[worker_id] = worker_data
         return worker_data
@@ -76,10 +78,11 @@ def display_workers(workers_data):
         "Hostname", 
         "Hashrate (H/s)", 
         "Modelo da CPU", 
-        "Núcleos (C/T)",  # Updated column name
+        "Núcleos (C/T)",  
         "Memória Total (MB)", 
         "Memória Livre (MB)", 
         "Média de Carga (1m, 5m, 15m)", 
+        "Pool", 
         "Status"
     ]
 
@@ -93,6 +96,7 @@ def display_workers(workers_data):
             status = f"{Fore.RED}Offline{Style.RESET_ALL}"
             text_style = Fore.BLACK + Style.DIM
             cores_threads = "0c/0t"
+            pool = "N/A"
         else:
             hashrate = worker.get("hashrate", 0)
             total_memory = worker.get("total_memory", 0)
@@ -104,22 +108,25 @@ def display_workers(workers_data):
             cores = worker.get("cores", "N/A")
             threads = worker.get("threads", "N/A")
             cores_threads = f"{cores}c/{threads}t"
+            pool = worker.get("pool", "N/A")
 
         table_data.append([
             f"{text_style}{Fore.GREEN}{worker['worker_id']}{Style.RESET_ALL}",
             f"{text_style}{Fore.CYAN}{hashrate}{Style.RESET_ALL}",
             f"{text_style}{Fore.YELLOW}{worker['cpu_model']}{Style.RESET_ALL}",
-            f"{text_style}{Fore.MAGENTA}{cores_threads}{Style.RESET_ALL}",  # Show cores and threads
+            f"{text_style}{Fore.MAGENTA}{cores_threads}{Style.RESET_ALL}",  
             f"{text_style}{Fore.BLUE}{total_memory} MB{Style.RESET_ALL}",
             f"{text_style}{Fore.BLUE}{free_memory} MB{Style.RESET_ALL}",
             f"{text_style}{Fore.RED}{load_average}{Style.RESET_ALL}",
+            f"{text_style}{Fore.YELLOW}{pool}{Style.RESET_ALL}",
             status
         ])
 
-    print(tabulate(table_data, headers=headers, tablefmt="pretty"))
+    print(tabulate(table_data, headers=headers, tablefmt="simpleh"))
 
-def display_total_hashrate(total_hashrate):
-    print(f"{Fore.YELLOW}Total Hashrate: {Fore.GREEN}{total_hashrate} H/s{Style.RESET_ALL}")
+def display_total_hashrate(total_hashrate, pools):
+    print(f"\n{Fore.YELLOW}Hashrate Total: {Fore.GREEN}{total_hashrate} H/s{Style.RESET_ALL}")
+    print(f"{Fore.CYAN}Pools sendo mineradas:{Style.RESET_ALL} {', '.join(pools)}")
 
 def main():
     urls = load_worker_urls()
@@ -128,6 +135,7 @@ def main():
     while True:
         workers_data = []
         total_hashrate = 0
+        pools = set()
 
         for worker_id, worker_data in cache.items():
             workers_data.append({**worker_data, "offline": True})
@@ -146,6 +154,8 @@ def main():
                     hashrate = worker_data["hashrate"]
                     if hashrate is not None:
                         total_hashrate += hashrate
+                    if "pool" in worker_data and worker_data["pool"] != "N/A":
+                        pools.add(worker_data["pool"])
                 except TypeError as e:
                     print(f"{Fore.RED}Error adding hashrate for worker {worker_data.get('worker_id', 'Unknown')}: {e}{Style.RESET_ALL}")
 
@@ -153,7 +163,7 @@ def main():
 
         display_workers(workers_data)
 
-        display_total_hashrate(total_hashrate)
+        display_total_hashrate(total_hashrate, pools)
 
         save_cache(cache)
 
