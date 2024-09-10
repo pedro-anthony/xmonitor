@@ -125,7 +125,7 @@ def display_workers(workers_data):
     print(tabulate(table_data, headers=headers, tablefmt="simpleh"))
 
 def display_total_hashrate(total_hashrate, pools):
-    print(f"\n{Fore.YELLOW}Hashrate Total: {Fore.GREEN}{total_hashrate} H/s{Style.RESET_ALL}")
+    print(f"\n{Fore.YELLOW}Hashrate Total: {Fore.GREEN}{total_hashrate / 1000:.2f} KH/s{Style.RESET_ALL} ({total_hashrate} H/s)")
     print(f"{Fore.CYAN}Pools sendo mineradas:{Style.RESET_ALL} {', '.join(pools)}")
 
 def main():
